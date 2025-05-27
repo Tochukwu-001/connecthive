@@ -17,7 +17,7 @@ const Navbar = () => {
     { label: "Sign Up", url: "#" },
   ];
   return (
-    <nav className="px-8 py-2 shadow-md flex items-center justify-between">
+    <nav className="px-8 py-2 shadow-md flex items-center justify-between sticky top-0 w-full bg-white">
       <div className="flex items-center gap-1 z-50">
         <Image
           src={"/logo.png"}
@@ -44,7 +44,7 @@ const Navbar = () => {
       </div>
 
       {/* tablet and mobile */}
-      <div className={`lg:hidden ${navOpen ? "flex" : "hidden"} items-center flex-col justify-center gap-16 bg-white h-dvh w-full fixed top-0 left-0`}>
+      <div className={`lg:hidden transition-transform duration-300 ${navOpen ? "translate-x-0" : "translate-x-full"} items-center flex flex-col justify-center gap-16 bg-white h-dvh w-full fixed top-0 left-0`}>
         {navItems.map((item, index) => (
           <Link
             key={index}
