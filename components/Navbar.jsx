@@ -18,7 +18,7 @@ const Navbar = () => {
   ];
   return (
     <nav className="px-8 py-2 shadow-md flex items-center justify-between">
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1 z-50">
         <Image
           src={"/logo.png"}
           alt="logo"
@@ -43,15 +43,29 @@ const Navbar = () => {
         ))}
       </div>
 
+      {/* tablet and mobile */}
+      <div className={`lg:hidden ${navOpen ? "flex" : "hidden"} items-center flex-col justify-center gap-16 bg-white h-dvh w-full fixed top-0 left-0`}>
+        {navItems.map((item, index) => (
+          <Link
+            key={index}
+            href={item.url}
+            className="text-lg hover:text-blue-500 transition-all"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
+
       <button
+        className="lg:hidden z-50"
         onClick={() => {
           setNavOpen(!navOpen);
         }}
       >
         {navOpen ? (
-          <MdClose className="text-2xl lg:hidden" />
+          <MdClose className="text-2xl" />
         ) : (
-          <HiOutlineMenuAlt3 className="text-2xl lg:hidden" />
+          <HiOutlineMenuAlt3 className="text-2xl" />
         )}
       </button>
     </nav>
