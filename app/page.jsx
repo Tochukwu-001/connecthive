@@ -15,10 +15,10 @@ export default function Home() {
             artisans alike.
           </p>
           <div className="flex max-md:flex-col items-center md:gap-10 gap-5 w-full justify-center">
-            <button className="border border-white px-10 py-2 text-white text-base lg:text-lg max-md:w-full">
+            <button className="border border-white px-10 py-2 text-white text-base lg:text-lg max-md:w-full hover:bg-blue-600 hover:border-blue-600 transition-all">
               Connect Now
             </button>
-            <button className="border border-white px-10 py-2 text-white text-base lg:text-lg max-md:w-full">
+            <button className="border border-white px-10 py-2 text-white text-base lg:text-lg max-md:w-full hover:bg-blue-600 hover:border-blue-600 transition-all">
               Learn More
             </button>
           </div>
