@@ -66,6 +66,7 @@ const Navbar = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
+            className="outline-none"
           >
             <img
               src={session?.user?.image}
