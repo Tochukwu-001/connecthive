@@ -1,38 +1,31 @@
 "use client";
-import React, { useState } from "react";
-import { Field, Form, Formik, ErrorMessage  } from "formik";
+import React from "react";
+import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-const Achievement = ({session}) => {
-  const [position, setPosition] = useState("")
-  const [achievement, setAchievement] = useState("")
-  console.log(session);
-  
-  const iv = {
+const Achievement = ({ session }) => {
+  const initialValues = {
     position: "",
-    achievement: ""
-  }
+    achievement: "",
+  };
 
-  const vs = Yup.object({
+  const validationSchema = Yup.object({
     position: Yup.string().required("Position is a required field"),
     achievement: Yup.string()
       .required("Achievements is a required field")
-      .min(5, "Mininum of 5 characters"),
+      .min(5, "Minimum of 5 characters"),
   });
 
-  const handleSubmit = (e)=>{
-    e.preventDefault()
+  const handleSubmit = (values) => {
     const achievementData = {
       image: session?.user?.image,
       author: session?.user?.name,
       timestamp: new Date().toLocaleDateString(),
-      position,
-      achievement
-    }
+      ...values,
+    };
 
     console.log(achievementData);
-    
-  }
+  };
 
   return (
     <main className="min-h-dvh md:p-5 p-2">
@@ -40,18 +33,24 @@ const Achievement = ({session}) => {
         Share your achievements with the community
       </h1>
 
-      <Formik initialValues={iv} validationSchema={vs}>
-        <Form onSubmit={handleSubmit} className="max-w-3xl mx-auto my-5 space-y-5">
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        <Form className="max-w-3xl mx-auto my-5 space-y-5">
           <div>
             <Field
               type="text"
               placeholder="Position..."
               name="position"
-              value={position}
-              onChange={(e)=>{setPosition(e.target.value)}}
               className="border border-gray-200 p-3 outline-none w-full rounded-md shadow"
             />
-            <ErrorMessage name="position" component={"p"} className="text-xs text-red-600 mt-2"/>
+            <ErrorMessage
+              name="position"
+              component="p"
+              className="text-xs text-red-600 mt-2"
+            />
           </div>
 
           <div>
@@ -59,11 +58,13 @@ const Achievement = ({session}) => {
               as="textarea"
               placeholder="Share your achievements..."
               name="achievement"
-              value={achievement}
-              onChange={(e)=>{setAchievement(e.target.value)}}
               className="border border-gray-200 p-3 outline-none w-full rounded-md shadow"
             />
-            <ErrorMessage name="achievement" component={"p"} className="text-xs text-red-600 mt-2"/>
+            <ErrorMessage
+              name="achievement"
+              component="p"
+              className="text-xs text-red-600 mt-2"
+            />
           </div>
 
           <button
