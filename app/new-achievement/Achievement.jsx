@@ -2,6 +2,8 @@
 import React from "react";
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { collection, addDoc } from "firebase/firestore"; 
+import { db } from "@/lib/firebaseConfig";
 
 const Achievement = ({ session }) => {
   const initialValues = {
@@ -16,15 +18,22 @@ const Achievement = ({ session }) => {
       .min(5, "Minimum of 5 characters"),
   });
 
-  const handleSubmit = (values) => {
-    const achievementData = {
-      image: session?.user?.image,
-      author: session?.user?.name,
-      timestamp: new Date().toLocaleDateString(),
-      ...values,
-    };
-
-    console.log(achievementData);
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      const achievementData = {
+        image: session?.user?.image,
+        author: session?.user?.name,
+        timestamp: new Date().toLocaleDateString(),
+        ...values,
+      };
+      const docRef = await addDoc(collection(db, "achievements"), achievementData)
+      console.log(achievementData);
+      console.log("Document written with ID: ", docRef.id);
+      resetForm();
+    } catch (error) {
+      console.error("Error sending achievement", error);
+      alert("An error occurred.");
+    }
   };
 
   return (
