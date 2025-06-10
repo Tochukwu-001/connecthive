@@ -2,15 +2,20 @@ import React from "react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa6";
 import { FaXTwitter } from "react-icons/fa6";
-import { signIn } from "@/auth"; // Assuming signIn is a function to handle sign-in logic
+import { auth, signIn } from "@/auth"; // Assuming signIn is a function to handle sign-in logic
+import { redirect } from "next/navigation";
 
+const page = async () => {
+  // const session = await auth()
+  //     if (!session) {
+  //         redirect('/connect')
+  //     }
   return (
     <main className="min-h-dvh flex items-center justify-center">
       <div className="space-y-10 max-md:p-3">
         <h1 className="text-4xl text-blue-600 font-bold max-md:text-center">
           Sign in to ConnectHive
         </h1>
-
         <div className=" flex flex-col gap-10">
             <form
                 action={async () => {
@@ -43,5 +48,5 @@ import { signIn } from "@/auth"; // Assuming signIn is a function to handle sign
       </div>
     </main>
   );
-
+}
 export default page;
