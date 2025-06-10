@@ -5,7 +5,6 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { MdClose } from "react-icons/md";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
@@ -67,13 +66,15 @@ const Navbar = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
+            className="outline-none"
           >
             <img
-              src={session?.user.image}
-              alt={session.user.name.slice(0, 2).toUpperCase()}
+              src={session?.user?.image}
+              alt={session?.user?.name.slice(0, 2).toUpperCase()}
               className="w-10 h-10 ml-7 rounded-full"
             />
           </button>
+
           <Menu
             id="basic-menu"
             anchorEl={anchorEl}
@@ -85,8 +86,12 @@ const Navbar = () => {
               },
             }}
           >
-            <MenuItem onClick={handleClose}>My Account</MenuItem>
-            <MenuItem onClick={handleClose}>Add Achievement</MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link href="#">My Account</Link>
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <Link href="/new-achievement">Add New Achievement</Link>
+            </MenuItem>
             <MenuItem onClick={handleClose}>Logout</MenuItem>
           </Menu>
         </div>

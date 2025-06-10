@@ -3,10 +3,15 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa6";
 import { FaXTwitter } from "react-icons/fa6";
 import { auth, signIn } from "@/auth";
+import { redirect } from "next/navigation";
 
 const page = async () => {
   const session = await auth()
   console.log(session?.user?.name);
+
+  if (session) {
+    redirect("/")
+  }
   
   return (
     <main className="min-h-dvh flex items-center justify-center">

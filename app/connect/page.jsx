@@ -1,4 +1,4 @@
-import { FaHeart, FaRegCommentDots } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 
 const mockPosts = [
   {
