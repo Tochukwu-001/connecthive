@@ -8,10 +8,11 @@ import { redirect } from "next/navigation";
 const page = async () => {
   const session = await auth()
   console.log(session?.user?.name);
+  console.log(session)
 
-  if (session) {
-    redirect("/")
-  }
+  // if (session) {
+  //   redirect("/")
+  // }
   
   return (
     <main className="min-h-dvh flex items-center justify-center">

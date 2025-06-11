@@ -1,36 +1,39 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { collection, addDoc } from "firebase/firestore"; 
+import { db } from "@/lib/firebaseConfig";
 
 const Achievement = ({ session }) => {
-  const [position, setPosition] = useState("");
-  const [achievement, setAchievement] = useState("");
-  console.log(session);
-
-  const iv = {
+  const initialValues = {
     position: "",
     achievement: "",
   };
 
-  const vs = Yup.object({
+  const validationSchema = Yup.object({
     position: Yup.string().required("Position is a required field"),
     achievement: Yup.string()
       .required("Achievements is a required field")
-      .min(5, "Mininum of 5 characters"),
+      .min(5, "Minimum of 5 characters"),
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const achievementData = {
-      image: session?.user?.image,
-      author: session?.user?.name,
-      timestamp: new Date().toLocaleDateString(),
-      position,
-      achievement,
-    };
-
-    console.log(achievementData);
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      const achievementData = {
+        image: session?.user?.image,
+        author: session?.user?.name,
+        timestamp: new Date().toLocaleDateString(),
+        ...values,
+      };
+      const docRef = await addDoc(collection(db, "achievements"), achievementData)
+      console.log(achievementData);
+      console.log("Document written with ID: ", docRef.id);
+      resetForm();
+    } catch (error) {
+      console.error("Error sending achievement", error);
+      alert("An error occurred.");
+    }
   };
 
   return (
@@ -39,25 +42,22 @@ const Achievement = ({ session }) => {
         Share your achievements with the community
       </h1>
 
-      <Formik initialValues={iv} validationSchema={vs}>
-        <Form
-          onSubmit={handleSubmit}
-          className="max-w-3xl mx-auto my-5 space-y-5"
-        >
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        <Form className="max-w-3xl mx-auto my-5 space-y-5">
           <div>
             <Field
               type="text"
               placeholder="Position..."
               name="position"
-              value={position}
-              onChange={(e) => {
-                setPosition(e.target.value);
-              }}
               className="border border-gray-200 p-3 outline-none w-full rounded-md shadow"
             />
             <ErrorMessage
               name="position"
-              component={"p"}
+              component="p"
               className="text-xs text-red-600 mt-2"
             />
           </div>
@@ -67,15 +67,11 @@ const Achievement = ({ session }) => {
               as="textarea"
               placeholder="Share your achievements..."
               name="achievement"
-              value={achievement}
-              onChange={(e) => {
-                setAchievement(e.target.value);
-              }}
               className="border border-gray-200 p-3 outline-none w-full rounded-md shadow"
             />
             <ErrorMessage
               name="achievement"
-              component={"p"}
+              component="p"
               className="text-xs text-red-600 mt-2"
             />
           </div>
