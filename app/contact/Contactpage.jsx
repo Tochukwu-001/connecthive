@@ -115,8 +115,8 @@ const handleSubmit = (e) =>{
           </div>
         </div>
 
-        <Formik initialValues={inv} validationSchema={vls}>
-          <Form onSubmit={handleSubmit} className="space-y-5 max-md:pt-3 ">
+        <Formik initialValues={inv} validationSchema={vls} onSubmit={handleSubmit}>
+          <Form  className="space-y-5 max-md:pt-3 ">
             <div className="flex gap-8">
               <div>
                 <label>First Name</label>
