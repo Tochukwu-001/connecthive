@@ -49,7 +49,7 @@ const page = () => {
               </li>
             </ul>
             <img
-              src="https://via.placeholder.com/600x300?text=What+We+Offer+Illustration"
+              src="/offer.png"
               alt="What We Offer"
               className="w-full rounded-[20px] mt-5"
             />
