@@ -8,60 +8,63 @@ import { FaInstagram } from "react-icons/fa";
 import { RiTwitterXFill } from "react-icons/ri";
 import { FaGithub } from "react-icons/fa6";
 import { Field, Form, Formik, ErrorMessage } from "formik";
-import * as Yup from 'yup';
+import * as Yup from "yup";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/lib/firebaseConfig";
+import { LuLoaderPinwheel } from "react-icons/lu";
+
+import { Alert, Snackbar } from "@mui/material";
 
 
 
-
-
-
-
-
-const Contactpage = ({session}) => {
+const Contactpage = ({ session }) => {
+  const [processing, setProcessing] = useState(false);
+   const [open, setOpen] = useState(false);
+  const [alertType, setAlertType] = useState("success"); // "success" or "error"
 
   console.log(session);
-  
 
-  const [firstname, setFirstname] = useState("")
-  const [lastname, setLastname] = useState("")
-  const [email, setEmail] = useState("")
-  const [phonenumber, setPhonenumber] = useState("")
-  const [message, setMessaage] = useState("")
+  const inv = {
+    firstname: "",
+    lastname: "",
+    email: "",
+    phonenumber: "",
+    message: "",
+  };
 
-
-const inv = {
-  firstname: "",
-  lastname: "",
-  email: "",
-  phonenumber:"",
-  message:"",
-  
-};
-
-
-const vls = Yup.object({
-  firstname: Yup.string().required("First name is a required field"),
-   lastname: Yup.string().required("Last name is a required field"),
-   phonenumber: Yup.string().required("This is required"),
+  const vls = Yup.object({
+    firstname: Yup.string().required("First name is a required field"),
+    lastname: Yup.string().required("Last name is a required field"),
+    phonenumber: Yup.string().required("This is required"),
     email: Yup.string().required("Email name is a required field"),
-    message: Yup.string().required("This is a required field").min(10, "minimum of 10 characters"),
+    message: Yup.string()
+      .required("This is a required field")
+      .min(10, "minimum of 10 characters"),
+  });
 
-})
+  const handleSubmit = async (values, { resetForm }) => {
+    setProcessing(true)
+    try {
+      const contactdata = {
+        ...values,
+      };
 
-
-const handleSubmit = (e) =>{
-  e.preventDefault();
-
-  const contactdata = {
-    firstname,
-    lastname,
-    email,
-    message,
-  }
- 
-  console.log(contactdata);
-  
-}
+      const docRef = await addDoc(collection(db, "contact"), contactdata);
+      console.log(contactdata);
+      console.log("Document written with ID: ", docRef.id);
+      setAlertType("success"); // set to success
+    setOpen(true);
+      resetForm();
+    } catch (error) {
+      console.error("Error in sending report", error);
+      // alert("An error occured");
+      setAlertType("error"); // set to error
+    setOpen(true);
+    }finally{
+      setProcessing(false)
+    }
+    
+  };
 
   return (
     <main className="p-3">
@@ -114,27 +117,26 @@ const handleSubmit = (e) =>{
             </div>
           </div>
         </div>
-
-        <Formik initialValues={inv} validationSchema={vls} onSubmit={handleSubmit}>
-          <Form  className="space-y-5 max-md:pt-3 ">
+        <Formik
+          initialValues={inv}
+          validationSchema={vls}
+          onSubmit={handleSubmit}
+        >
+          <Form className="space-y-5 max-md:pt-3 ">
             <div className="flex gap-8">
               <div>
                 <label>First Name</label>
                 <Field
                   name="firstname"
                   type="text"
-                  value={firstname}
-                  onChange = {(e)=>{
-                    setFirstname(e.target.value)
-                  }} 
                   placeholder="First name"
                   className="border border-gray-300 p-3 outline-none w-full rounded-md shadow"
                 />
 
                 <ErrorMessage
-                name="firstname"
-                component={"p"}
-                className="text-xs text-red-600 mt-2"
+                  name="firstname"
+                  component={"p"}
+                  className="text-xs text-red-600 mt-2"
                 />
               </div>
 
@@ -143,17 +145,13 @@ const handleSubmit = (e) =>{
                 <Field
                   name="lastname"
                   type="text"
-                  value={lastname}
-                  onChange={(e)=>{
-                    setLastname(e.target.value)
-                  }}
                   placeholder="Last name"
                   className="border border-gray-300 p-3 outline-none w-full rounded-md shadow"
                 />
                 <ErrorMessage
-                name="lastname"
-                component={"p"}
-                className="text-xs text-red-600 mt-2"
+                  name="lastname"
+                  component={"p"}
+                  className="text-xs text-red-600 mt-2"
                 />
               </div>
             </div>
@@ -163,10 +161,6 @@ const handleSubmit = (e) =>{
               <Field
                 name="email"
                 type="text"
-                value={email}
-                onChange={(e)=>{
-                  setEmail(e.target.value)
-                }}
                 placeholder="email@example.com"
                 className="border border-gray-300 p-3 outline-none w-full rounded-md shadow"
               />
@@ -174,7 +168,7 @@ const handleSubmit = (e) =>{
                 name="email"
                 component={"p"}
                 className="text-xs text-red-600 mt-2"
-                />
+              />
             </div>
 
             <div>
@@ -182,10 +176,6 @@ const handleSubmit = (e) =>{
               <Field
                 name="phonenumber"
                 type="text"
-                value={phonenumber}
-                onChange={(e)=>{
-                  setPhonenumber(e.target.value)
-                }}
                 placeholder="+234 80 0011 0011"
                 className="border border-gray-300 p-3 outline-none w-full rounded-md shadow"
               />
@@ -193,7 +183,7 @@ const handleSubmit = (e) =>{
                 name="phonenumber"
                 component={"p"}
                 className="text-xs text-red-600 mt-2"
-                />
+              />
             </div>
 
             <div>
@@ -201,10 +191,6 @@ const handleSubmit = (e) =>{
               <Field
                 as="textarea"
                 name="message"
-                value={message}
-                onChange={(e)=>{
-                  setMessaage(e.target.value)
-                }}
                 placeholder="Your message"
                 type="text"
                 className="border border-gray-300 p-3 outline-none w-full rounded-md shadow h-35"
@@ -213,14 +199,31 @@ const handleSubmit = (e) =>{
                 name="message"
                 component={"p"}
                 className="text-xs text-red-600 mt-2"
-                />
+              />
             </div>
 
-            <button className="rounded-sm bg-blue-500 p-3 text-white font-semibold hover:bg-blue-900 transition-all ">
-              Send Message
+            <button
+              disabled={processing}
+              type="submit"
+              className="rounded-sm bg-blue-500 p-3 px-10 text-white font-semibold hover:bg-blue-900 transition-all "
+            >
+              {processing ? <LuLoaderPinwheel className="animate-spin text-2xl"/> : "Submit" }
             </button>
           </Form>
         </Formik>
+
+      <Snackbar
+  open={open}
+  autoHideDuration={4000}
+  onClose={() => setOpen(false)}
+  anchorOrigin={{ vertical:'top', horizontal:'center'}}
+>
+  <Alert onClose={() => setOpen(false)} severity={alertType}>
+    {alertType === "success" ? "Your message was successfully sent!" : "Failed to send message."}
+  </Alert>
+</Snackbar>
+
+    
       </div>
     </main>
   );

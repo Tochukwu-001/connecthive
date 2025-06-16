@@ -32,7 +32,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="px-8 py-3 shadow-md flex items-center justify-between sticky top-0 w-full bg-white">
+    <nav className="px-8 py-3 shadow-md flex items-center justify-between sticky top-0 w-full bg-white z-50">
       <div className="flex items-center gap-1 z-50">
         <Image
           src={"/logo.png"}
@@ -122,7 +122,7 @@ const Navbar = () => {
       </div>
 
       <button
-        className="lg:hidden z-50"
+        className='{} lg:hidden z-50'
         onClick={() => {
           setNavOpen(!navOpen);
         }}

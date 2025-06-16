@@ -2,6 +2,10 @@
 import { FaHeart } from "react-icons/fa";
 
 const mockPosts = [
+
+
+
+
   {
     id: 1,
     user: {
@@ -27,6 +31,9 @@ const mockPosts = [
 ];
 
 export default function Connect() {
+
+
+
   return (
     <main className="max-w-2xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6 text-gray-800">Recent Achievements</h1>
