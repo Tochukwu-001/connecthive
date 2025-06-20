@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -87,12 +87,14 @@ const Navbar = () => {
             }}
           >
             <MenuItem onClick={handleClose}>
-              <Link href="#">My Account</Link>
+              <Link href="/profile">My Account</Link>
             </MenuItem>
             <MenuItem onClick={handleClose}>
               <Link href="/new-achievement">Add New Achievement</Link>
             </MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
+            <MenuItem onClick={handleClose}>
+              <button onClick={() => signOut()}>Sign Out</button>
+            </MenuItem>
           </Menu>
         </div>
       ) : (
