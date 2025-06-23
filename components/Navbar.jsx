@@ -53,7 +53,7 @@ const Navbar = () => {
             href={item.url}
             className="text-lg hover:text-blue-500 transition-all"
           >
-            {item.label}
+            <span>{item.label}</span>
           </Link>
         ))}
       </div>
@@ -114,6 +114,7 @@ const Navbar = () => {
       >
         {navItems.map((item, index) => (
           <Link
+            onClick={() => setNavOpen(!navOpen)}
             key={index}
             href={item.url}
             className="text-lg hover:text-blue-500 transition-all"

@@ -34,7 +34,8 @@ const Achievement = ({ session }) => {
         author: session?.user?.name,
         timestamp: new Date().toLocaleDateString(),
         ...values,
-        // likes: []
+        likes: [],
+        userId: session?.user?.id
       };
       const docRef = await addDoc(
         collection(db, "achievements"),
@@ -43,7 +44,7 @@ const Achievement = ({ session }) => {
       console.log(achievementData);
       console.log("Document written with ID: ", docRef.id);
       resetForm();
-      setShowModal(true)
+      setShowModal(true);
     } catch (error) {
       console.error("Error sending achievement", error);
       alert("An error occurred.");
@@ -106,11 +107,20 @@ const Achievement = ({ session }) => {
         </Form>
       </Formik>
 
-      <div className={`${showModal ? "flex" : "hidden"} h-dvh bg-black/50 w-full absolute inset-0 items-center justify-center`}>
+      <div
+        className={`${
+          showModal ? "flex" : "hidden"
+        } h-dvh bg-black/50 w-full absolute inset-0 items-center justify-center`}
+      >
         <div className="w-80 h-52 bg-white shadow-md relative p-5 flex ic justify-center flex-col gap-5">
           <FaRegCheckCircle className="text-center text-5xl text-green-600 mx-auto" />
-          <p className="text-center text-lg">Your achievement has been recorded</p>
-          <button onClick={()=> setShowModal(false)} className="absolute top-2 right-2">
+          <p className="text-center text-lg">
+            Your achievement has been recorded
+          </p>
+          <button
+            onClick={() => setShowModal(false)}
+            className="absolute top-2 right-2"
+          >
             <IoIosCloseCircleOutline className="text-2xl text-red-700" />
           </button>
         </div>
