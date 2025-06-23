@@ -1,4 +1,5 @@
 import { auth, signOut } from "@/auth";
+import ProfileUpdate from "@/components/ProfileUpdate";
 import { redirect } from "next/navigation";
 import React from "react";
 import { AiOutlineLogout } from "react-icons/ai";
@@ -7,12 +8,15 @@ const page = async () => {
   const session = await auth();
   // console.log(session);
 
+  const uid = session?.user?.id
+  const uname = session?.user?.name
+
   if (!session) {
     redirect("/auth/signin")
   }
 
   return (
-    <main className="min-h-dvh flex items-center justify-center">
+    <main className="min-h-dvh flex flex-col items-center justify-center">
       <div className="space-y-5">
         <div className="border rounded-full border-gray-400">
           <img
@@ -42,6 +46,8 @@ const page = async () => {
           </button>
         </form>
       </div>
+
+      <ProfileUpdate uid={uid} uname={uname}/>
     </main>
   );
 };

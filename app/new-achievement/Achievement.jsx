@@ -13,7 +13,6 @@ const Achievement = ({ session }) => {
   const [showModal, setShowModal] = useState(false);
 
   console.log(showModal);
-  
 
   const initialValues = {
     position: "",
@@ -35,6 +34,7 @@ const Achievement = ({ session }) => {
         author: session?.user?.name,
         timestamp: new Date().toLocaleDateString(),
         ...values,
+        // likes: []
       };
       const docRef = await addDoc(
         collection(db, "achievements"),
