@@ -1,11 +1,11 @@
-import { People, Chat, TrendingUp, EmojiEvents, Person, School, Code, Analytics, Psychology } from '@mui/icons-material';
+import { FaUsers, FaComments, FaTrending, FaTrophy, FaUserAlt, FaGraduationCap, FaCode, FaChartBar, FaBrain } from 'react-icons/fa';
 
 const professionals = [
-  { name: 'Sarah Johnson', role: 'Growth Strategist', icon: Person },
-  { name: 'Michael Chen', role: 'AI Researcher', icon: Psychology },
-  { name: 'Emma Davis', role: 'Product Lead', icon: Analytics },
-  { name: 'James Wilson', role: 'Tech Innovator', icon: Code },
-  { name: 'Sofia Rodriguez', role: 'Data Scientist', icon: School }
+  { name: 'Sarah Johnson', role: 'Growth Strategist', icon: FaUserAlt },
+  { name: 'Michael Chen', role: 'AI Researcher', icon: FaBrain },
+  { name: 'Emma Davis', role: 'Product Lead', icon: FaChartBar },
+  { name: 'James Wilson', role: 'Tech Innovator', icon: FaCode },
+  { name: 'Sofia Rodriguez', role: 'Data Scientist', icon: FaGraduationCap }
 ];
 
 const ProfessionalAvatar = ({ professional, delay }) => (
@@ -22,14 +22,17 @@ const ProfessionalAvatar = ({ professional, delay }) => (
   </div>
 );
 
-const StatCard = ({ icon: Icon, title, gradient }) => (
-  <div className="text-center">
-    <div className={`bg-gradient-to-br ${gradient} rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3`}>
-      <Icon className="w-6 h-6 text-white" />
+const StatCard = ({ icon: Icon, title, gradient }) => {
+  if (!Icon) return null; // Add a guard clause
+  return (
+    <div className="text-center">
+      <div className={`bg-gradient-to-br ${gradient} rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3`}>
+        <Icon className="w-6 h-6 text-white" />
+      </div>
+      <p className="text-sm font-semibold text-indigo-800">{title}</p>
     </div>
-    <p className="text-sm font-semibold text-indigo-800">{title}</p>
-  </div>
-);
+  );
+};
 
 const InterfaceCard = ({ title, gradient, isMain }) => (
   <div className={`relative bg-white rounded-2xl ${isMain ? 'shadow-2xl p-8 mb-6' : 'shadow-xl p-6 ml-8'} transform hover:scale-105 transition-transform duration-300`}>
@@ -137,22 +140,22 @@ const About = () => {
 
               <div className="grid grid-cols-2 gap-6 pt-8">
                 <StatCard
-                  icon={People}
+                  icon={FaUsers}
                   title="50,000+ Members"
                   gradient="from-pink-500 to-purple-600"
                 />
                 <StatCard
-                  icon={Chat}
+                  icon={FaComments}
                   title="Daily Discussions"
                   gradient="from-blue-500 to-indigo-600"
                 />
                 <StatCard
-                  icon={TrendingUp}
+                  icon={FaTrending}
                   title="Growth Insights"
                   gradient="from-indigo-500 to-blue-600"
                 />
                 <StatCard
-                  icon={EmojiEvents}
+                  icon={FaTrophy}
                   title="Expert Network"
                   gradient="from-pink-500 to-red-500"
                 />

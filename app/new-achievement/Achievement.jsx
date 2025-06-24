@@ -1,76 +1,125 @@
-'use client'
-import React, { useState } from 'react'
-import { Field, Formik, ErrorMessage, Form } from 'formik'
-import * as Yup from 'yup'
+"use client";
+import React, { useState } from "react";
+import { Field, Form, Formik, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/lib/firebaseConfig";
+import { BiLoaderCircle } from "react-icons/bi";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
-const Achievement = ({session}) => {
-    const [position, setPosition] = useState("")
-    const [achievement, setAchievement] = useState("")
-    console.log(session);
-    
-    console.log(session)
-    const iv =  {
-        position: '',
-        achievement: '',
+const Achievement = ({ session }) => {
+  const [processing, setProcessing] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  console.log(showModal);
+
+  const initialValues = {
+    position: "",
+    achievement: "",
+  };
+
+  const validationSchema = Yup.object({
+    position: Yup.string().required("Position is a required field"),
+    achievement: Yup.string()
+      .required("Achievements is a required field")
+      .min(5, "Minimum of 5 characters"),
+  });
+
+  const handleSubmit = async (values, { resetForm }) => {
+    setProcessing(true);
+    try {
+      const achievementData = {
+        image: session?.user?.image,
+        author: session?.user?.name,
+        timestamp: new Date().toLocaleDateString(),
+        ...values,
+        likes: [],
+        userId: session?.user?.id
+      };
+      const docRef = await addDoc(
+        collection(db, "achievements"),
+        achievementData
+      );
+      console.log(achievementData);
+      console.log("Document written with ID: ", docRef.id);
+      resetForm();
+      setShowModal(true)
+    } catch (error) {
+      console.error("Error sending achievement", error);
+      alert("An error occurred.");
+    } finally {
+      setProcessing(false);
     }
-    const vs = Yup.object({
-        position: Yup.string()
-            .required('Position is a required field')
-            .min(2, 'Position must be at least 2 characters long'),
-        achievement: Yup.string()
-            .required('Achievement is a required field')
-            .min(10, 'Achievement must be at least 10 characters long'),
-    })
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const achievementData = {
-            image: session?.user?.image,
-            name: session?.user?.name,
-            timestamp: new Date().toLocaleDateString(),
-            position,
-            achievement
-        }
+  };
 
-        console.log(achievementData);
-        
-    }
-    return (
-        <main className="min-h-dvh p-5">
-            <h1 className='text-center text-black text-xl font-bold text-gray-800 md:text-3xl'>
-                Share your achievements with the community!
-            </h1>
-            <Formik initialValues={iv} validationSchema={vs}>
-                <Form onSubmit={handleSubmit} className='max-w-3xl mx-auto my-5 p-5 rounded-lg shadow-lg bg-white space-y-5'>
-                    <div>
-                        <Field
-                            type="text"
-                            name="position"
-                            value={position}
-                            onChange={(e)=> {setPosition(e.target.value)}}
-                            placeholder="Position..."
-                            className="border p-3 outline-none text-black border-gray-300 rounded-md w-full mb-4"
-                        />
-                        <ErrorMessage name="position" component="div" className="text-red-500 text-sm mb-2" />
-                    </div>
-                    <div>
-                        <Field
-                            as="textarea"
-                            name="achievement"
-                            value={achievement}
-                            onChange={(e)=> {setAchievement(e.target.value)}}
-                            placeholder="Share your Achievement..."
-                            className="border p-3 outline-none text-black border-gray-300 rounded-md w-full mb-4"
-                        />
-                        <ErrorMessage name="achievement" component="div" className="text-red-500 text-sm mb-2" />
-                    </div>
-                    <button
-                        type="submit" className='bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition-colors duration-300 w-full font-semibold'>
-                        Share Achievement
-                    </button>
-                </Form>
-            </Formik>
-        </main>
-    )
-}
+  return (
+    <main className="min-h-dvh md:p-5 p-2 relative z-20">
+      <h1 className="text-center text-gray-800 md:text-3xl text-xl font-bold">
+        Share your achievements with the community
+      </h1>
 
-export default Achievement
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        <Form className="max-w-3xl mx-auto my-5 space-y-5">
+          <div>
+            <Field
+              type="text"
+              placeholder="Position..."
+              name="position"
+              className="border border-gray-200 p-3 outline-none w-full rounded-md shadow"
+            />
+            <ErrorMessage
+              name="position"
+              component="p"
+              className="text-xs text-red-600 mt-2"
+            />
+          </div>
+
+          <div>
+            <Field
+              as="textarea"
+              placeholder="Share your achievements..."
+              name="achievement"
+              className="border border-gray-200 p-3 outline-none w-full rounded-md shadow"
+            />
+            <ErrorMessage
+              name="achievement"
+              component="p"
+              className="text-xs text-red-600 mt-2"
+            />
+          </div>
+
+          <button
+            disabled={processing}
+            type="submit"
+            className="bg-blue-500 text-white flex items-center justify-center p-3 rounded-md w-full font-semibold hover:bg-blue-600 transition-colors duration-200 outline-none"
+          >
+            {processing ? (
+              <BiLoaderCircle className="animate-spin text-2xl" />
+            ) : (
+              "Share Achievement"
+            )}
+          </button>
+        </Form>
+      </Formik>
+
+      <div className={`${showModal ? "flex" : "hidden"} h-dvh bg-black/50 w-full absolute inset-0 items-center justify-center`}>
+        <div className="w-80 h-52 bg-white shadow-md relative p-5 flex ic justify-center flex-col gap-5">
+          <FaRegCheckCircle className="text-center text-5xl text-green-600 mx-auto" />
+          <p className="text-center text-lg">Your achievement has been recorded</p>
+          <button onClick={()=> setShowModal(false)} className="absolute top-2 right-2">
+            <IoIosCloseCircleOutline className="text-2xl text-red-700" />
+          </button>
+        </div>
+      </div>
+
+      {/* <button onClick={()=> setShowModal(true)}>Open</button> */}
+    </main>
+  );
+};
+
+export default Achievement;
