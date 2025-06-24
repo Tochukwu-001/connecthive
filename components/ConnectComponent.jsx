@@ -45,7 +45,7 @@ export default function ConnectComponent({ session }) {
     const postRef = doc(db, "achievements", postId);
     try {
       const postSnap = await getDoc(postRef);
-      if (!postSnap) {
+      if (!postSnap.exists()) {
         alert("Post not found");
       }
 
